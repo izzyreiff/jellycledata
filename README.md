@@ -1,7 +1,9 @@
 # jellycledata
 ### Converting show information to NFO format
 
-## `jellycledata` is a python script and CLI tool for creating movie.nfo files formatted for jellyfin based on .txt files in the ~encora copy format~. There are two ways to use it: through the python script, and through the CLI tool.
+### `jellycledata` is a python script and CLI tool for creating movie.nfo files formatted for jellyfin based on .txt files in the ~encora copy format~.
+
+### There are two ways to use it: through the python script, and through the CLI tool.
 
 ## Installation
 To use info2nfo, ensure you have Python 3 installed on your system. You can download and install Python from the official website.
@@ -16,6 +18,17 @@ Install the required dependencies:
 `pip install -r requirements.txt`
 
 ## Usage
+
+## Python script - Great for one file
+If you have a `.txt` file copied from encora, simply run it through jellycledata's `script.py` to produce a perfectly usable `movie.nfo` file.
+#### In the script.py file:
+1. Change the `txt_filename` variable to the name of your .txt file, the templated version is `info.txt`.
+2. Change the `nfo_filename` variable to the desired name of your .nfo file, the templated version is `movie.nfo`.
+3. Run `$ script.py` (however your machine runs python scripts)
+4. Receive an outputted `.nfo` file in the same directory.
+
+
+## CLI Tool - Great for many files
 To convert a single info.txt file to movie.nfo, run the following command:
 `python jellycle.py -o movie.nfo`
 
