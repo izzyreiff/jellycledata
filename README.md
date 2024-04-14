@@ -6,16 +6,16 @@
 There are two ways to use it: through the python script, and through the CLI tool.
 
 ## Installation
-To use info2nfo, ensure you have Python 3 installed on your system. You can download and install Python from the official website.
+To use jellycledata, ensure you have Python 3 installed on your system. You can download and install Python from the official website.
 
 Clone or download the jellycledata repository to your local machine:
-`git clone https://github.com/izzyreiff/jellycledata.git`
+    git clone https://github.com/izzyreiff/jellycledata.git
 
 Navigate to the jellycle directory:
-`cd jellycle`
+    cd jellycle
 
 Install the required dependencies:
-`pip install -r requirements.txt`
+    pip install -r requirements.txt
 
 ## Usage
 
@@ -48,7 +48,7 @@ The input file (info.txt) should follow a specific format to ensure proper conve
 - Notes: Additional notes or information about the show (optional).
 
 Here's an example of the info.txt format:
-    
+
     Title - Tour
     Date - Master
     Format
