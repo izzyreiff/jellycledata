@@ -46,14 +46,15 @@ You can specify a different output file name using the `-o` or `--output_file` o
 python info2nfo.py -o output.nfo
 ```
 
-You can also not specify an output file name, and it will default to `movie.nfo`.
+You may also choose not to specify an output file name, and it will default to `movie.nfo`.
 
 ## Input Format
 The input file (info.txt) should follow a specific format to ensure proper conversion. Each info.txt file should contain the following information:
 
 - Title: The title of the show.
 - Tour: The tour or production name (if applicable).
-- Date: The date of the show in one of the following formats: "Month Day, Year", "Year", or "Month, Year".
+- Date: The date of the show in one of the following formats: "Month Day, Year", "Month, Year", or "Year".
+- Director: The show's director.
 - Format: The format of the show (e.g., Video, Audio, Highlights).
 - Cast: The cast members and their respective roles.
 - Notes: Additional notes or information about the show (optional).
@@ -61,7 +62,7 @@ The input file (info.txt) should follow a specific format to ensure proper conve
 Here's an example of the info.txt format:
 ```
 Title - Tour
-Date - Master
+Date - Director
 Format
 
 Cast:
