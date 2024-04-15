@@ -21,7 +21,6 @@ def parse_date(date_str):
     return date.strftime("%Y-%m-%d") if date else None  # Convert date to ISO format if parsed successfully
 
 def cast_to_xml(cast_info):
-    #xml_data = "<actors>\n"
     xml_data = ""
     for entry in cast_info.split(','):
         try:
@@ -35,7 +34,6 @@ def cast_to_xml(cast_info):
         xml_data += f"        <name>{name.strip()}</name>\n"
         xml_data += f"        <role>{role.strip()}</role>\n"
         xml_data += f"    </actor>\n"
-    # xml_data += "</actors>"
     return xml_data
 
 def generate_nfo_from_txt(txt_content):
@@ -128,14 +126,14 @@ def generate_nfo_from_txt(txt_content):
 
 def generate_nfo_file(txt_filename, nfo_filename):
     # Read content of the .txt file
-    with open(txt_filename, 'r') as txt_file:
+    with open(txt_filename, 'r', encoding='utf-8') as txt_file:
         txt_content = txt_file.read()
 
     # Generate content for .nfo file
     nfo_content = generate_nfo_from_txt(txt_content)
 
     # Write content to .nfo file
-    with open(nfo_filename, 'w') as nfo_file:
+    with open(nfo_filename, 'w', encoding='utf-8') as nfo_file:
         nfo_file.write(nfo_content)
 
 #---------------------------------
@@ -151,8 +149,11 @@ def convert_files(input_file, output_file):
         # Generate corresponding output file path
         output_dir = os.path.dirname(input_file)
         output_nfo = os.path.join(output_dir, output_file)
-        # Generate .nfo file
-        generate_nfo_file(input_file, output_nfo)
+        try:
+            # Generate .nfo file
+            generate_nfo_file(input_file, output_nfo)
+        except Exception as e:
+            print(f"Error processing file '{input_file}': {e}")
 
     # Recursively search directories for 'info.txt' files
     if os.path.isdir(input_file):
@@ -164,7 +165,12 @@ def convert_files(input_file, output_file):
                     output_dir = os.path.dirname(txt_path)
                     output_nfo = os.path.join(output_dir, output_file)
                     # Generate .nfo file
-                    generate_nfo_file(txt_path, output_nfo)
+                    try:
+                        # Generate .nfo file
+                        generate_nfo_file(txt_path, output_nfo)
+                    except Exception as e:
+                        print(f"Error processing file '{txt_path}': {e}")
+                        print(f"Current directory: {root}")
 
 def main():
     args = parse_args()

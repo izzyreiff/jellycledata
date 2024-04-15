@@ -19,7 +19,6 @@ def parse_date(date_str):
     return date.strftime("%Y-%m-%d") if date else None  # Convert date to ISO format if parsed successfully
 
 def cast_to_xml(cast_info):
-    #xml_data = "<actors>\n"
     xml_data = ""
     for entry in cast_info.split(','):
         try:
@@ -33,7 +32,6 @@ def cast_to_xml(cast_info):
         xml_data += f"        <name>{name.strip()}</name>\n"
         xml_data += f"        <role>{role.strip()}</role>\n"
         xml_data += f"    </actor>\n"
-    # xml_data += "</actors>"
     return xml_data
 
 def generate_nfo_from_txt(txt_content):
