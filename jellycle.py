@@ -28,7 +28,7 @@ def cast_to_xml(cast_info):
             role = role[:-1]  # Remove the trailing ')'
         except ValueError:
             # If there's only one value, set role to "Ensemble"
-            name = entry.strip()
+            name = entry
             role = "Ensemble"
         xml_data += f"    <actor>\n"
         xml_data += f"        <name>{name.strip()}</name>\n"
@@ -43,6 +43,14 @@ def generate_nfo_from_txt(txt_content):
     title_parts = lines[0].split(' - ')
     title = title_parts[0].strip()
     tour = title_parts[1]  # Extract tour from the title
+    # clean tour word bank for genre / studio
+    keywords = ["Pre-Broadway", "Pre-West End", "Off-Broadway", "Off-West End", "Broadway", "West End", "US National Tour", "UK Tour", "UK & Ireland Tour", "Tour"]
+    # Check if any keyword is present in the tour variable
+    for keyword in keywords:
+        if keyword in tour:
+            cleantour = keyword
+        else:
+            cleantour = tour
     date_parts = lines[1].split(' - ')
     if date_parts[0].endswith(")"):
         # Split the input_string by "("
@@ -78,9 +86,16 @@ def generate_nfo_from_txt(txt_content):
     if notes_line_index is not None:
         notes = lines[notes_line_index].strip()
     else:
-        notes = "The plot was lost along the way... Please email izzyreiff+jf@gmail.com'"
+        notes = "The plot was lost along the way... Please email izzyreiff at gmail dot com"
     years = date.split('-')
     year = years[0]
+    # Error handling for {&, "", ''} for XML (.NFO) file
+    # Replace double quotes with &quot;
+    notes = notes.replace('"', '&quot;')
+    # Replace single quotes with &apos;
+    notes = notes.replace("'", '&apos;')
+    # Replace ampersands with &amp;
+    notes = notes.replace('&', '&amp;')
     # Generate content for the .nfo file
     nfo_content = f"""\
 <?xml version="1.0" encoding="utf-8"?>
@@ -88,7 +103,7 @@ def generate_nfo_from_txt(txt_content):
     <title>{title}</title>
     <sorttitle>{title}</sorttitle>
     <set></set>
-    <studio>{tour}</studio>
+    <studio>{cleantour}</studio>
     <year>{year}</year>
     <runtime></runtime>
     <mpaa></mpaa>
@@ -112,6 +127,7 @@ def generate_nfo_from_txt(txt_content):
     <releasedate>{date}</releasedate>
     <style>{format_info}</style>
     <tag>{format_info}</tag>
+    <tag>{tour}</tag>
 
     <director>{master}</director>
     <credits></credits>
