@@ -124,14 +124,14 @@ def generate_nfo_from_txt(txt_content):
 
 def generate_nfo_file(txt_filename, nfo_filename):
     # Read content of the .txt file
-    with open(txt_filename, 'r') as txt_file:
+    with open(txt_filename, 'r', encoding='utf-8') as txt_file:
         txt_content = txt_file.read()
 
     # Generate content for .nfo file
     nfo_content = generate_nfo_from_txt(txt_content)
 
     # Write content to .nfo file
-    with open(nfo_filename, 'w') as nfo_file:
+    with open(nfo_filename, 'w', encoding='utf-8') as nfo_file:
         nfo_file.write(nfo_content)
 
 # Example usage for generate nfo file
