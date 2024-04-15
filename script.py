@@ -19,15 +19,21 @@ def parse_date(date_str):
     return date.strftime("%Y-%m-%d") if date else None  # Convert date to ISO format if parsed successfully
 
 def cast_to_xml(cast_info):
-    xml_data = "<actors>\n"
+    #xml_data = "<actors>\n"
+    xml_data = ""
     for entry in cast_info.split(','):
-        name, role = entry.split('(')
-        role = role[:-1]  # Remove the trailing ')'
+        try:
+            name, role = entry.split('(')
+            role = role[:-1]  # Remove the trailing ')'
+        except ValueError:
+            # If there's only one value, set role to "Ensemble"
+            name = entry.strip()
+            role = "Ensemble"
         xml_data += f"    <actor>\n"
         xml_data += f"        <name>{name.strip()}</name>\n"
         xml_data += f"        <role>{role.strip()}</role>\n"
         xml_data += f"    </actor>\n"
-    xml_data += "</actors>"
+    # xml_data += "</actors>"
     return xml_data
 
 def generate_nfo_from_txt(txt_content):
@@ -38,7 +44,14 @@ def generate_nfo_from_txt(txt_content):
     title = title_parts[0].strip()
     tour = title_parts[1]  # Extract tour from the title
     date_parts = lines[1].split(' - ')
-    date = date_parts[0].strip()
+    if date_parts[0].endswith(")"):
+        # Split the input_string by "("
+        parts = date_parts[0].rsplit("(", 1)
+        # Take the first part, which is before the "("
+        date = parts[0].strip()
+    else:
+        # If there's no "(#)" pattern at the end, return the original string
+        date = date_parts[0]  
     master = date_parts[1].strip() if len(date_parts) > 1 else ""  # Extract master if available
     date = parse_date(date)  # Parse date using custom function
     format_info = lines[2].strip()
@@ -66,20 +79,46 @@ def generate_nfo_from_txt(txt_content):
         notes = lines[notes_line_index].strip()
     else:
         notes = "The plot was lost along the way... Please email izzyreiff+jf@gmail.com'"
-
+    years = date.split('-')
+    year = years[0]
     # Generate content for the .nfo file
     nfo_content = f"""\
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <movie>
-<tile>{title}</title>
-<plot>{notes}</plot>
-<genre>Musical Theater</genre>
-<genre>{genre}</genre>
-<studio>{tour}</studio>
-<premiered>{date}</premiered>
-<style>{format_info}</style>
-<director>{master}</director>
+    <title>{title}</title>
+    <sorttitle>{title}</sorttitle>
+    <set></set>
+    <studio>{tour}</studio>
+    <year>{year}</year>
+    <runtime></runtime>
+    <mpaa></mpaa>
+    
+    <outline></outline>
+    <plot>{notes}</plot>
+    <tagline></tagline>
+    
+    <rating></rating>
+    <votes>0</votes>
+    <top250></top250>
+    <id></id>
+
+    <thumb></thumb>
+    <filenameandpath></filenameandpath>
+    <trailer></trailer>
+    
+    <genre>Musical Theater</genre>
+    <genre>{genre}</genre>
+
+    <releasedate>{date}</releasedate>
+    <style>{format_info}</style>
+    <tag>{format_info}</tag>
+
+    <director>{master}</director>
+    <credits></credits>
 {cast}
+    
+    <playcount>0</playcount>
+
 </movie>
 """
 
