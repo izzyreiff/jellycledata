@@ -1,6 +1,12 @@
 from datetime import datetime
 import argparse
 import os
+import sys
+
+# Redirect print statements
+sys.stdout = open("errors.txt", "w")
+sys.stderr = open("errors.txt", "a")
+
 
 def parse_date(date_str):
     try:
@@ -38,6 +44,14 @@ def cast_to_xml(cast_info):
 
 def generate_nfo_from_txt(txt_content):
     # Split the content of the txt file into lines
+    # Error handling for {&, "", ''} for XML (.NFO) file
+    # Replace double quotes with &quot;
+    #txt_content = txt_content.replace('"', '&quot;')
+    # Replace single quotes with &apos;
+    #txt_content = txt_content.replace("'", '&apos;')
+    # Replace ampersands with &amp;
+    txt_content = txt_content.replace('&', '&amp;')
+    # REAL START OF METHOD
     lines = txt_content.split('\n')
     # Extract title, tour, date, format, master, cast, and notes
     title_parts = lines[0].split(' - ')
@@ -51,6 +65,8 @@ def generate_nfo_from_txt(txt_content):
             cleantour = keyword
         else:
             cleantour = tour
+            # Write print statement for tour and cleantour to troubleshoot special cases
+
     date_parts = lines[1].split(' - ')
     if date_parts[0].endswith(")"):
         # Split the input_string by "("
@@ -59,7 +75,7 @@ def generate_nfo_from_txt(txt_content):
         date = parts[0].strip()
     else:
         # If there's no "(#)" pattern at the end, return the original string
-        date = date_parts[0]  
+        date = date_parts[0].strip()
     master = date_parts[1].strip() if len(date_parts) > 1 else ""  # Extract master if available
     date = parse_date(date)  # Parse date using custom function
     format_info = lines[2].strip()
@@ -69,7 +85,7 @@ def generate_nfo_from_txt(txt_content):
         genre = "Bootleg"
     cast_line_index = None
     for i, line in enumerate(lines):
-        if "Cast:" in line:
+        if "Cast:" in line or "CAST:" in line:
             cast_line_index = i+1
             break
     if cast_line_index is not None:
@@ -79,7 +95,7 @@ def generate_nfo_from_txt(txt_content):
     cast = cast_to_xml(cast)
     notes_line_index = None
     for i, line in enumerate(lines):
-        if "Notes:" in line:
+        if "Notes:" in line or "NOTES:" in line:
             notes_line_index = i+1
             break
     # Extract notes if "Notes:" line is found
@@ -89,13 +105,20 @@ def generate_nfo_from_txt(txt_content):
         notes = "The plot was lost along the way... Please email izzyreiff at gmail dot com"
     years = date.split('-')
     year = years[0]
-    # Error handling for {&, "", ''} for XML (.NFO) file
+    play = "Play"
+    musical = "Musical"
+    ballet = "Ballet"
+    opera = "Opera"
+    concert = "Concert"
+    special = "Special"
+     # Error handling for {&, "", ''} for XML (.NFO) file
     # Replace double quotes with &quot;
-    notes = notes.replace('"', '&quot;')
+    #notes = notes.replace('"', '&quot;')
     # Replace single quotes with &apos;
-    notes = notes.replace("'", '&apos;')
+    #notes = notes.replace("'", '&apos;')
     # Replace ampersands with &amp;
-    notes = notes.replace('&', '&amp;')
+    #notes = notes.replace('&', '&amp;')
+    
     # Generate content for the .nfo file
     nfo_content = f"""\
 <?xml version="1.0" encoding="utf-8"?>
@@ -123,6 +146,7 @@ def generate_nfo_from_txt(txt_content):
     
     <genre>Musical Theater</genre>
     <genre>{genre}</genre>
+    <genre>{cleantour}</genre>
     
     <releasedate>{date}</releasedate>
     <style>{format_info}</style>
@@ -186,7 +210,7 @@ def convert_files(input_file, output_file):
                         generate_nfo_file(txt_path, output_nfo)
                     except Exception as e:
                         print(f"Error processing file '{txt_path}': {e}")
-                        print(f"Current directory: {root}")
+                        #print(f"Current directory: {root}")
 
 def main():
     args = parse_args()
