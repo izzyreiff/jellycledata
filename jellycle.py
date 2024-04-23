@@ -58,7 +58,7 @@ def generate_nfo_from_txt(txt_content):
     title = title_parts[0].strip()
     tour = title_parts[1]  # Extract tour from the title
     # clean tour word bank for genre / studio
-    keywords = ["Pre-Broadway", "Pre-West End", "Off-Broadway", "Off-West End", "Broadway", "West End", "US National Tour", "UK Tour", "UK & Ireland Tour", "Tour"]
+    keywords = ["Pre-Broadway", "Pre-West End", "Off-Broadway", "Off-West End", "Broadway", "West End", "US National Tour", "UK Tour", "UK & Ireland Tour"]
     # Check if any keyword is present in the tour variable
     for keyword in keywords:
         if keyword in tour:
