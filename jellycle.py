@@ -42,7 +42,17 @@ def cast_to_xml(cast_info):
         xml_data += f"    </actor>\n"
     return xml_data
 
-def generate_nfo_from_txt(txt_content):
+def generate_nfo_from_txt(txt_content, input_file_path):
+    # Extract the directory name from the input file path
+    directory_name = os.path.dirname(input_file_path)
+    # Check if any of the keywords are present in the directory name
+    keywords = ["operas", "musicals", "concerts", "plays"]
+    showType = ""
+    for keyword in keywords:
+        if keyword in directory_name.lower():
+            showType = keyword.capitalize()  # Capitalize the showType
+            break  # Stop searching if a keyword is found
+    
     # Split the content of the txt file into lines
     # Error handling for {&, "", ''} for XML (.NFO) file
     # Replace double quotes with &quot;
@@ -105,13 +115,9 @@ def generate_nfo_from_txt(txt_content):
         notes = "The plot was lost along the way... Please email izzyreiff at gmail dot com"
     years = date.split('-')
     year = years[0]
-    play = "Play"
-    musical = "Musical"
-    ballet = "Ballet"
-    opera = "Opera"
-    concert = "Concert"
-    special = "Special"
-     # Error handling for {&, "", ''} for XML (.NFO) file
+    showType = ""
+    
+    # Error handling for {&, "", ''} for XML (.NFO) file
     # Replace double quotes with &quot;
     #notes = notes.replace('"', '&quot;')
     # Replace single quotes with &apos;
@@ -147,11 +153,13 @@ def generate_nfo_from_txt(txt_content):
     <genre>Musical Theater</genre>
     <genre>{genre}</genre>
     <genre>{cleantour}</genre>
-    
+    <genre>{showType}</genre>
     <releasedate>{date}</releasedate>
     <style>{format_info}</style>
     <tag>{format_info}</tag>
     <tag>{tour}</tag>
+    <tag>{cleantour}</tag>
+    <tag>{showType}</tag>
 
     <director>{master}</director>
     <credits></credits>
